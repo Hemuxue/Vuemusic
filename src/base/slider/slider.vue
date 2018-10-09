@@ -31,7 +31,7 @@ export default {
         },
         interval: {
             type: Number,
-            default: 3000
+            default: 4000
         }
     },
     data(){
@@ -52,7 +52,7 @@ export default {
                 this._play()
             }
         }, 20);
-
+        //window监听 resize ->窗口大小改变事件
         window.addEventListener('resize', ()=>{
             if(!this.slider){
                 return
@@ -63,6 +63,9 @@ export default {
             this.slider.refresh()
             
         })
+    },
+    destroyed() {
+        clearTimeout(this.timer)
     },
     methods: {
         _setSliderWidth(isResize) {
@@ -86,6 +89,7 @@ export default {
             }
             this.$refs.sliderGroup.style.width = width + "px";
         },
+        //添加轮播图下面的小圆点
         _initDots(){
             this.dots = new Array(this.children.length)
         },
@@ -93,7 +97,7 @@ export default {
             this.slider = new BScroll(this.$refs.slider, {
                 scrollX: true,
                 scrollY: false,
-                momentum: false,
+                momentum: false,//快速滚动时不开启滑动惯性
                 snap: {
                     loop: this.loop,
                     threshold: 0.3,
@@ -104,10 +108,10 @@ export default {
                 // snapLoop: this.loop,
                 // snapThreshold: 0.3,
                 // snapSpeed: 400,
-                click: true
+                // click: true
                 /*老师说这个click ，会在better-scroll内部派发一个时间，阻止默认行为。
                 但是新版的可能已经没有问题了。不删除依旧能点击*/
-            });
+            })
             /* 当better-scroll 触发滚动的时候会派发一个srollEnd事件，只要监听这个事件就能知道发生了滚动
             通过 this.slider.getCurrentPage().pageX 获取当前的滚动index值 */
             this.slider.on('scrollEnd', () =>{
@@ -117,22 +121,33 @@ export default {
                 //   新版本已经不用减了
                 // }
                 this.currentPageIndex = pageIndex
-
+                
                 if(this.autoPlay) {
                     clearTimeout(this.timer)
+                    console.log(this.currentPageIndex)
                     this._play()
                 }
             })
             
         },
         _play(){
-            let pageIndex = this.currentPageIndex + 1
+            
+            // let pageIndex = this.currentPageIndex + 1
+            // if(pageIndex == this.dots.length ){
+            //     console.log('inter')
+            //     pageIndex = -1
+            // }
+            
+            /*使用next -> 跳转下一个页面。可以实现无缝轮播 。
+            使用 goTopage 是跳转到指定index的图片，这样还会出现最后一页无法轮播的情况，
+            自己处理 index的话 ，达不到完美的无缝轮播*/
             this.timer = setTimeout( () =>{
-                this.slider.goToPage(pageIndex,0 ,400)
+                this.slider.next()
             },this.interval)
         },
         
-    }
+    },
+    
 };
 </script>
 <style lang="stylus" scoped>
