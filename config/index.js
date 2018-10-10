@@ -10,7 +10,21 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      //请求'/api目录下的请求，都会被代理到‘http://c.y.qq.com'中
+      '/api/getDiscList':{
+        target:'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
+        secure:false,//接受运行在https上的服务,
+        changeOrigin:true, //接口跨域，需要配置这个参数
+        pathRewrite:{
+          '^/api/getDiscList':'' //代理
+        },
+        headers: {
+          referer:'https://c.y.qq.com', //请求头的设置
+          host: 'c.y.qq.com'
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

@@ -64,7 +64,15 @@ export default {
             
         })
     },
-    destroyed() {
+    activated() {
+        if(this.autoPlay){
+            this._play();
+        }
+    },
+    deactivated() {
+        clearTimeout(this.timer)
+    },
+    beforeDestroy() {
         clearTimeout(this.timer)
     },
     methods: {
@@ -124,7 +132,6 @@ export default {
                 
                 if(this.autoPlay) {
                     clearTimeout(this.timer)
-                    console.log(this.currentPageIndex)
                     this._play()
                 }
             })
@@ -141,6 +148,7 @@ export default {
             /*使用next -> 跳转下一个页面。可以实现无缝轮播 。
             使用 goTopage 是跳转到指定index的图片，这样还会出现最后一页无法轮播的情况，
             自己处理 index的话 ，达不到完美的无缝轮播*/
+
             this.timer = setTimeout( () =>{
                 this.slider.next()
             },this.interval)

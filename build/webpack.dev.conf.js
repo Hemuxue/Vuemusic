@@ -13,6 +13,13 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
+//服务端发送请求代理，定义变量
+
+let express = require('express')
+let apiRoutes = express.Router()
+let axios = require('axios')
+const app = express()
+app.use('/api',apiRoutes)
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -42,6 +49,29 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
+    },
+    before(app){
+      /* 这个接口的作用就是从真实的qq的服务器地址发生一个http请求，
+      同时修改headers的 referer和host，修改成 qq相关的referer和host
+      来达到欺骗qq的服务器，来获取数据
+      params 是我们给接口传递的参数，就是data后面那一堆
+      再通过res.json  透传给前端*/
+      // app.get('/api/getDiscList',function(req,res){
+      //   var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+      //   axios.get(url, {
+      //     headers: {
+      //       referer: 'https://c.y.qq.com/',
+      //       host: 'c.y.qq.com'
+      //     },
+      //     params: req.query //把 req里面的参数传递来url里面
+      //   }).then((response) =>{
+      //     /*response  是qq返回的 ， res是 我们自己定义接口的返回
+      //     通过 res.json(xx) 把 xx 透传递给前端*/
+      //     res.json(response.data)
+      //   }).catch( (e) =>{
+      //     console.log(e)
+      //   })
+      // })
     }
   },
   plugins: [
