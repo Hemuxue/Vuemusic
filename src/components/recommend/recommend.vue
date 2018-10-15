@@ -3,7 +3,7 @@
         
         <!-- 这里滚轮不了的原因是数据还没没返回的时候，scroll 已经初始化完毕了，
         所以需要当数据发生改变时，调用scroll.refresh() -->
-        <scroll :ref="scroll" class="recommend-content" :data="discList">
+        <scroll ref="scroll" class="recommend-content" :data="discList">
             
 
             <!-- 由于better-scroll 只能对一个元素进行设置滚动，所以需要一个外层包裹 -->
@@ -62,8 +62,10 @@ export default {
         }
     },
     created(){
+        
         this._getRecommend()
         this._getDiscList() 
+        
     },
     methods: {
         _getRecommend(){
@@ -81,7 +83,7 @@ export default {
                 }
             })
         },
-        lodeImage(){
+        loadImage(){
             /* 监听图片加载事件的原因是：
                 由于之传入了discList 来作为scroll 是否重新计算的监听data 。
                 如果出现轮播图区域的数据请求比discList区域的数据回来的慢，
