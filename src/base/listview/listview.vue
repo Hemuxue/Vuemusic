@@ -12,7 +12,10 @@
                 ref="listGroup">
                 <h2 class="list-group-title">{{group.title}}</h2>
                 <ul>
-                    <li v-for="item in group.items" class="list-group-item">
+                    <li 
+                        @click="selectItem(item)"
+                    v-for="item in group.items" 
+                    class="list-group-item">
                         <img class="avatar" v-lazy="item.avatar" >
                         <span class="name">{{item.name}}</span>
                     </li>
@@ -124,6 +127,11 @@ export default {
         scroll(pos){
             this.scrollY = pos.y
         },
+        //由于listview是基础组件，所以不写任何的业务逻辑，只是把事件派发出去
+        selectItem(item){
+            this.$emit('select',item)
+        }
+        ,
         _scrollTo(index){
 
             /*由于touch事件绑定在父级上面的，所以如果没有点击到 li上，
@@ -151,7 +159,8 @@ export default {
                 height += item.clientHeight
                 this.listHeight.push(height)
             }
-        }
+        },
+        
         
     },
     watch:{

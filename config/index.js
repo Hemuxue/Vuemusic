@@ -23,6 +23,17 @@ module.exports = {
           referer:'https://c.y.qq.com', //请求头的设置
           host: 'c.y.qq.com'
         }
+      },
+      '/api/getVkeyData':{
+        target:'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg',
+        secure:false,//接受运行在https上的服务
+        changeOrigin:true,//接口跨域,需要配置这个参数
+        pathRewrite:{
+          '^/api/getVkeyData':''//代理
+        },
+        headers:{
+          referer:'https://c.y.qq.com'//请求头的设置
+        }
       }
     },
 

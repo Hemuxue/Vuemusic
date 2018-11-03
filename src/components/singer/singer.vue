@@ -1,12 +1,20 @@
 <template>
-    <list-view :data="singers"></list-view>
+    <div>
+        <list-view @select="selectSinger" :data="singers"></list-view>
+        <!-- 子路由并不是真正的页面，只是可以做成一个遮罩层，仿佛来到了一个新的页面 -->
+        <router-view></router-view>
+    </div>
+    
+    
+    
 </template>
 <script>
 import {getSingerList} from 'api/singer'
 import {ERR_OK} from 'api/config'
 import Singer from 'common/js/singer'
 import ListView from 'base/listview/listview'
-
+//mapMutations 是mutation 的语法糖，
+import {mapMutations} from 'vuex'
 const HOT_NAME = '热门'
 const HOT_SINGER_LENGTH = '10'
 export default {
@@ -23,6 +31,14 @@ export default {
         this._getSingerList()     
     },
     methods: {
+        selectSinger(singer){
+            this.$router.push({
+                path:`singer/${singer.id}`
+            })
+            /*setSinger是 印射方法，实际上调用了,
+            this.$store.commit('SET_SINGER',singer)*/
+            this.setSinger(singer)
+        },
         _getSingerList() {
             getSingerList().then((res) =>{
                 if(res.code === ERR_OK){
@@ -82,7 +98,10 @@ export default {
             })
 
             return hot.concat(ret)
-        }
+        },
+        ...mapMutations({
+            setSinger: 'SET_SINGER'
+        })
     }
 }
 </script>
